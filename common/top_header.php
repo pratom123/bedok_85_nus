@@ -3,7 +3,7 @@
     // $_SESSION["isLoggedIn"] = true;
     // include 'initialize_all';
 
-    $dir = 'http://localhost/Bedok_85/'; //project directory
+    $dir = 'http://localhost/bedok_85_nus/'; //project directory
 ?>
 
 <!-- this is the main nav bar for all pages -->

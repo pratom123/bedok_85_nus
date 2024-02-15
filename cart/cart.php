@@ -250,7 +250,7 @@ session_start();
                     ";
                 }
 
-                $img_dir = 'http://localhost/Bedok_85/common/img/'; //item dish img parent folder
+                $img_dir = 'http://localhost/bedok_85_nus/common/img/'; //item dish img parent folder
 
                 if (!empty($num_items)) {
                     for($i=0;$i<$num_items;$i++) {
@@ -299,7 +299,7 @@ session_start();
                                     <form action='" ?>
                                     <?php 
                                     // In order to update current item, echo the link of the food dish page
-                                    $proj_dir = 'http://localhost/Bedok_85/'; //parent folder of the stalls' food dish
+                                    $proj_dir = 'http://localhost/bedok_85_nus/'; //parent folder of the stalls' food dish
                                     switch($cart[$i]['item_dish_name']) {
                                         // mapping dish name to dish page link
                                         case 'Bak Chor Mee (Small)' : echo $dir . 'xjrcm/bcm_small/bcm_small.php';

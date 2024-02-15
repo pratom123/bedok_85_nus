@@ -3,7 +3,7 @@
     // $_SESSION["isLoggedIn"] = true;
     // include 'initialize_all';
 
-    $dir = 'http://localhost/Bedok_85/'; //project directory
+    $dir = 'http://localhost/bedok_85_nus/'; //project directory
 ?>
 
 <div class="overlay_background" id="overlay_background">

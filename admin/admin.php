@@ -10,7 +10,7 @@ include 'function_definition.php';
         header("Location:../home/index.php");
     }
 
-    $proj_dir = 'http://localhost/Bedok_85/';
+    $proj_dir = 'http://localhost/bedok_85_nus/';
 ?>
 <!DOCTYPE html>
 <html lang='en'>
