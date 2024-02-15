@@ -1,0 +1,65 @@
+/* overlay is the sidepanel for navigation links */
+
+#overlay_background {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    /* z-index: 1; */
+}
+
+.overlay {
+    width: 0;
+    /* width: 400px; */
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: white;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    transition: 0.5s;
+    border-left: solid rgb(209, 209, 209) 2px;
+}
+
+.overlay header {
+    display: block;
+    /* border: black solid 2px; */
+}
+
+  /* Position and style the close button (top right corner) */
+.overlay header .closebtn {
+    font-size: 3em;
+    margin-left: 90%;
+    /* border: solid black 2px; */
+    color: red;
+  }
+
+/*------------------Styling nav_option_wrapper------------*/
+
+  /* The navigation menu links */
+  .overlay #nav_option_wrapper .nav_link a {
+    text-decoration: none;
+    font-size: 25px;
+    color: #3a3a3a;
+    display: block;
+    transition: 0.3s;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  /* When you mouse over the navigation links, change their color */
+.overlay #nav_option_wrapper a:hover {
+    color: #f1f1f1;
+  }
+
+#nav_option_wrapper ul li {
+    display: block;
+    margin: 20px auto
+}
+
+#nav_option_wrapper {
+    display: block;
+}
