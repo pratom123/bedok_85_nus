@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS `Account_information` (
 --
 
 INSERT INTO `Account_information` (`account_id`, `firstname`, `lastname`, `username`, `password_info`, `e_mail`, `mobile_no`, `Address1`, `Address2`, `Address3`, `credit_card`, `card_name`, `cv2`, `expirydate`, `admin`) VALUES
-(1, 'Jannai', 'Heng', 'JHENG016', '123', 'jannaiheng@hotmail.com', 86519663, '201 Jalan Loyang Besar #03-02', 'Nanyang Avenue', 'Tampines St 81', '1234567890123456', 'Jannai Heng', '123', '12/23', b'0'),
-(2, 'Jannai', 'Heng', 'admin_1', '123', 'jannaiheng@hotmail.com', 86519663, '201 Jalan Loyang Besar #03-02', 'dsadfsf', NULL, '1234567890123456', 'sdfsdf', '123', '12/23', b'1'),
+(1, 'Jannai', 'Heng', 'JHENG016', '123', 'jannaiheng@hotmail.com', 81234567, '2 Tampines Street #01-02', 'Nanyang Avenue', 'Tampines St 81', '1234567890123456', 'Jannai Heng', '123', '12/23', b'0'),
+(2, 'Jannai', 'Heng', 'admin_1', '123', 'jannaiheng@hotmail.com', 82345678, '3 Tampines Street #01-03', 'dsadfsf', NULL, '1234567890123456', 'sdfsdf', '123', '12/23', b'1'),
 (4, '', '', 'admin_2', '123', '', 81234567, NULL, NULL, NULL, '', '', '', '', b'1');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
