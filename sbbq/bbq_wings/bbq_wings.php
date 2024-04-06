@@ -48,7 +48,7 @@
                     <input type='hidden' name='item_stall_id' value='2'>
                     <input type='hidden' name='item_stall_name' value='Sin BBQ'>
                     <input type='hidden' name='item_dish_name' value='BBQ Wings'>
-                    <input type='hidden' name='item_dish_id' value='3'>
+                    <input type='hidden' name='item_dish_id' value='1'>
                     <input type='hidden' name='item_dish_img_name' value='<?php echo $img_name ?>'>
 
                 <header>
