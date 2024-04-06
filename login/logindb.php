@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bedok_85";
+$dbname = "bedok_85_nus";
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 if (!$conn) {
@@ -18,24 +18,24 @@ if( isset($_POST['username']) && isset($_POST['password']))
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = 'SELECT * from Account_information '
+    $sql = 'SELECT * from user '
             ."WHERE username ='$username'"
-            . "and password_info ='$password'";
+            . "and password ='$password'";
     $result = $conn->query($sql);
     if($result->num_rows>0)
     {
         $loginst=1;
         $_SESSION['valid_user'] = $username;
         $row = $result->fetch_assoc();
-        $_SESSION['account_id'] = $row['account_id'];
+        $_SESSION['account_id'] = $row['user_id'];
 
 
-        if ($row['admin'] == 1) {  //Checks if user is admin or customer
+        if ($row['user_type'] == 'stall') {  //Checks if user is admin or customer
             // user is admin, so go to admin page
             $_SESSION['isAdmin'] = true;
             // get stall id and stall name which the admin user is from
-            $query = "SELECT subquery.stall_id, stalls.stall_name FROM stalls, (SELECT stall_id FROM admin WHERE account_id = " . $row['account_id'] . ") subquery
-            WHERE stalls.stall_id = subquery.stall_id;";
+            $query = "SELECT subquery.stall_id, stall.stall_name FROM stall, (SELECT stall_id FROM admin WHERE s_user_id = " . $row['user_id'] . ") subquery
+            WHERE stall.stall_id = subquery.stall_id;";
 
             $result = $conn->query($query);
 
