@@ -14,26 +14,40 @@ require '../config.php';
 function retrieveDataFromDb() {
     if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])) {
         include '../common/connectDB.php';
-        $query = "SELECT * FROM Account_information WHERE account_id = '" . $_SESSION['account_id'] . "';";
+
+        // Collect customer address and credit card
+        $query = "SELECT user_id, `address` FROM `user` WHERE user_id = " . $_SESSION['account_id'] . ";";
+
+        // $query = "SELECT * FROM Account_information WHERE account_id = '" . $_SESSION['account_id'] . "';";
 
         $result = $db->query($query);
 
         if ($result->num_rows == 1) {
             $row = $result->fetch_assoc();
             $data = array (
-            'account_id' => $row['account_id'],
-            'Address1' => $row['Address1'],
-            'Address2' => $row['Address2'],
-            'Address3' => $row['Address3'],
-            'credit_card' => $row['credit_card'],
+            'account_id' => $row['user_id'],
+            'Address1' => $row['address'],
+            'Address2' => '',
+            'Address3' => '',
+            );
+        }
+
+        $query = "SELECT * FROM `credit_card` WHERE c_user_id = " . $_SESSION['account_id'] . ";";
+
+        $result = $db->query($query);
+
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            $data += array (
+            'credit_card' => $row['credit_card_no'],
             'card_name' => $row['card_name'],
-            'expirydate' => $row['expirydate'],
-            'cv2' => $row['cv2']
+            'cv2' => $row['cv2'],
+            'expirydate' => $row['expiry_date'],
             );
         }
 
         // get order no. from db
-        $query = 'SELECT max(order_id) as max_order_id FROM orders;';
+        $query = 'SELECT max(order_id) as max_order_id FROM `order`;';
         $result = $db->query($query);
 
         if ($result->num_rows == 1) {
@@ -124,6 +138,18 @@ function retrievePrices($_db) {
     return $prices;
 }
 
+function insertItemPreference($order_item_id, $item_pref) {
+    include '../common/connectDB.php';
+    $query = "INSERT INTO item_preference VALUES ($order_item_id, '" . $item_pref . "');";
+
+    $result = $db->query($query);
+
+    if(!$result) {
+        return true;
+    }
+    return false;
+}
+
 function checkForOrder($_db) {
     if (isset($_GET['order'])) {
         //There is an order request from user
@@ -201,23 +227,61 @@ function getDateTimeNow() {
 function emailCustomerReceipt($order_id) {
     include '../common/connectDB.php';
 
-    $query = "SELECT * FROM (SELECT DISTINCT order_items.order_id, orders.order_datetime, orders.total_price, food_details_table.food_details, order_items.collection_mode, order_items.order_status, Account_information.firstname, Account_information.lastname, delivery_address.address, Account_information.e_mail, Account_information.mobile_no, order_items.remark
-    FROM order_items
-    
-    INNER JOIN
-    
-    (SELECT order_id, GROUP_CONCAT( item_details SEPARATOR '<br/><br/>' ) AS food_details FROM (
-        SELECT * , CONCAT( item_quantity, 'x ', (SELECT dish_name FROM dishes WHERE order_items.dish_id = dishes.dish_id), '<br/>', item_pref) AS item_details FROM order_items)subquery
-        GROUP BY subquery.order_id
-    ) food_details_table
-    
-    ON order_items.order_id = food_details_table.order_id
-    
-    INNER JOIN orders ON orders.order_id = order_items.order_id
-    INNER JOIN Account_information ON Account_information.account_id = order_items.account_id
-    INNER JOIN delivery_address ON delivery_address.order_id = order_items.order_id) all_orders
+    $query = "SELECT
+    u.email, c.first_name, c.last_name, q3.datetime_ordered, q3.order_cost, q3.collection_mode, q3.order_id, q3.order_status, q3.food_details, da.address
+    FROM
+    ( -- food details
+        SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/>') food_details
+        FROM
+        (
+            SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>-', q1.special_instruction, '<br/>') as item_details
+            FROM
+            (
+                SELECT stall_food_id_query.customer_id, stall_food_id_query.datetime_ordered, stall_food_id_query.order_cost, stall_food_id_query.collection_mode, f_out.food_name, stall_food_id_query.order_id, stall_food_id_query.order_item_id, stall_food_id_query.quantity, stall_food_id_query.order_status, 
+                GROUP_CONCAT(CONCAT('-', ip.food_preference) SEPARATOR '<br/>') food_details, stall_food_id_query.special_instruction
+                FROM food f_out
 
-    WHERE all_orders.order_id = $order_id;";
+                INNER JOIN 
+                (SELECT
+                o.customer_id,
+                o.datetime_ordered,
+                o.order_cost,
+                o.collection_mode,
+                oi.stall_id,
+                oi.food_id,
+                oi.order_item_id,
+                oi.quantity,
+                oi.order_status,
+                oi.order_id,
+                oi.special_instruction
+                FROM `order` o
+                INNER JOIN order_item oi
+                ON o.order_id = oi.order_id
+                INNER JOIN stall s
+                ON oi.stall_id = s.stall_id
+                INNER JOIN food f
+                ON oi.food_id = f.food_id
+                WHERE o.order_id = 76
+                GROUP BY oi.food_id, oi.stall_id) stall_food_id_query
+                ON f_out.stall_id = stall_food_id_query.stall_id
+                AND f_out.food_id = stall_food_id_query.food_id
+
+                INNER JOIN item_preference ip
+                on ip.order_item_id = stall_food_id_query.order_item_id
+                GROUP BY stall_food_id_query.order_item_id, stall_food_id_query.order_status) q1
+            ) q2
+            GROUP BY q2.order_id
+        ) q3
+    INNER JOIN customer c
+    ON q3.customer_id = c.c_user_id 
+    INNER JOIN `user` u
+    ON c.c_user_id = u.user_id
+    LEFT JOIN delivery_address da
+    ON q3.order_id = da.order_id;";
+
+    // get user and customer email, first name and last name
+    // get order order_datetime, total_price, collection_mode, delivery address (if any)
+    // get order item food name, quantity, order_status, special instruction, and item preference
 
     $result = $db->query($query);
 
@@ -226,31 +290,31 @@ function emailCustomerReceipt($order_id) {
         $order = $result -> fetch_array(MYSQLI_ASSOC);  //fetch the entire row from mysql as an associative array
 
         //---------------------After getting latest order info from mysql, email customer-----------------
-        $customer_email = $order['e_mail'];
-        $customer_name = $order['firstname'] . ' ' . $order['lastname'];
-        $order_datetime = $order['order_datetime'];
-        $order_food_details = $order['food_details'];
-        $order_total_price = $order['total_price'];
+        $customer_email = $order['email'];
+        $customer_name = $order['first_name'] . ' ' . $order['last_name'];
+        $order_datetime = $order['datetime_ordered'];
+        $formatted_food_details = $order['food_details'];
+        $order_total_price = $order['order_cost'];
         $order_status = $order['order_status'];
         $collection_mode = $order['collection_mode'];
         $delivery_address = $order['address'];
-        $remark = $order['remark'];
+        // $remark = $order['remark'];
 
         // code below formats the delimited order food details strings into a display string with new line
-        $order_food_details = explode('<br/>', $order_food_details);
-        $temp = $order_food_details;
+        // $order_food_details = explode('<br/>', $order_food_details);
+        // $temp = $order_food_details;
 
-        $formatted_food_details = '';
-        for($i=0;$i<count($temp); $i++) {
-            if (strpos($temp[$i], '.')) {
-                $add_on_strings = explode('.', $temp[$i]);
-                // var_dump($add_on_strings);
-                for($j=0;$j<count($add_on_strings); $j++) {
-                    $formatted_food_details = $formatted_food_details . "<br/>-" . $add_on_strings[$j];
-                }
-            } else
-                $formatted_food_details = $formatted_food_details . "<br/>" . $temp[$i];
-        }
+        // $formatted_food_details = '';
+        // for($i=0;$i<count($temp); $i++) {
+        //     if (strpos($temp[$i], '.')) {
+        //         $add_on_strings = explode('.', $temp[$i]);
+        //         // var_dump($add_on_strings);
+        //         for($j=0;$j<count($add_on_strings); $j++) {
+        //             $formatted_food_details = $formatted_food_details . "<br/>-" . $add_on_strings[$j];
+        //         }
+        //     } else
+        //         $formatted_food_details = $formatted_food_details . "<br/>" . $temp[$i];
+        // }
         $subject = "Successful Order No. " . $order_id;
 
 
@@ -260,7 +324,7 @@ function emailCustomerReceipt($order_id) {
         <br/><b>Order ID:</b> ". $order_id . "
         <br/><b>Order Date/Time:</b> " . $order_datetime . "
         <br/>
-        <br/><u><b>Food Details</b></u>
+        <br/><u><b>Food Details</b></u><br/>
         " . $formatted_food_details . "
         <br/>
         <br/><b>Cost:</b> \$" . $order_total_price . "
@@ -271,6 +335,8 @@ function emailCustomerReceipt($order_id) {
             $message .= "(<b>Self-pickup</b>)<b>:</b><br/>";
         $message .= $order_status . ".<br/><br/>";
         // $message .= "Remark:\n$remark";
+
+        echo $message;
 
         //Create an instance; passing `true` enables exceptions
         $mail = new PHPMailer(true);
