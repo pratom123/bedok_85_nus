@@ -4,7 +4,7 @@ include('insertprofile_detail.php');
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bedok_85";
+$dbname = "bedok_85_nus";
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);

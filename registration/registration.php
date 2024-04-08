@@ -74,7 +74,7 @@ width: fit-content;
         <tr>
             <td>
                 <section id='first_name_section'>
-                <label>First name*: </label><input type='text' size= '20' id='firstname' name='firstname' equired>
+                <label>First name*: </label><input type='text' size= '20' id='firstname' name='firstname' required>
                 <label><div class="invalid_error_msg">Only Alphabets with spaces in between allowed!</label></div>
                 </section>
             </td>
@@ -103,7 +103,7 @@ width: fit-content;
         </tr>
         <tr>
             <td colspan="2">
-            <section id='phone_section'><label>Mobile No.*: </label><input type="text" size= "20" id="phoneno" name="phoneno" maxlength="8" required>
+            <section id='phone_section'><label>Mobile No.*: </label><input type="text" size= "20" id="phoneno" name="contact_no" maxlength="8" required>
             <label><div class="invalid_error_msg">digits only!</label></div>
             </section> 
             </td>
