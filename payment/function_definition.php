@@ -261,7 +261,7 @@ function emailCustomerReceipt($order_id) {
                 ON oi.stall_id = s.stall_id
                 INNER JOIN food f
                 ON oi.food_id = f.food_id
-                WHERE o.order_id = 76
+                WHERE o.order_id = $order_id
                 GROUP BY oi.food_id, oi.stall_id) stall_food_id_query
                 ON f_out.stall_id = stall_food_id_query.stall_id
                 AND f_out.food_id = stall_food_id_query.food_id
