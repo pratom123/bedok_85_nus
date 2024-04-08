@@ -254,6 +254,7 @@ include 'function_definition.php';
     <?php 
     
         if(isset($_GET['isUpdateSuccess'])) {
+            // echo "emailCustomerOrderStatusResult" . $_SESSION["emailCustomerOrderStatusResult"];
             if($_GET['isUpdateSuccess']) 
                 $msg = 'Update of selected order successful! An email has been sent to your customer';
                 else
@@ -262,6 +263,7 @@ include 'function_definition.php';
             echo "<script type='text/javascript'>alert('" . $msg . "')</script>";
 
             $_GET['isUpdateSuccess'] = NULL;
+            $_SESSION["emailCustomerOrderStatusResult"] = NULL;
         }
 
         if (isset($_GET['isUpdateStallDetailsSuccess'])) {
