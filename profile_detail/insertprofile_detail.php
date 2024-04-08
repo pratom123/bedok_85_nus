@@ -4,7 +4,7 @@ include('../login/logindb.php');
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bedok_85";
+$dbname = "bedok_85_nus";
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 if (!$conn) {
