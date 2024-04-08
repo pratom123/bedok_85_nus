@@ -221,7 +221,7 @@
                     <dl>
                         <dt>Description:</dt><dd><?php echo $stall_1['description']; ?></dd>
                         <dt>Announcement:</dt><dd><?php echo $stall_1['announcement']; ?></dd>
-                        <dt>Opening Hours:</dt><dd><?php echo $stall_1['opening_hour_start']; ?> to <?php echo $stall_1['opening_hour_end']; ?></dd>
+                        <dt>Opening Hours:</dt><dd><?php echo date("h:i A", strtotime($stall_1['opening_hour_start'])); ?> to <?php echo date("h:i A", strtotime($stall_1['opening_hour_end'])); ?></dd>
                         <dt>Contact Number:</dt><dd><?php echo $stall_1['contact_no']; ?></dd>
                         <dt>Unit Number:</dt><dd><?php echo $stall_1['unit_no']; ?></dd>
                     </dl>
@@ -284,7 +284,7 @@
                     <dl>
                     <dt>Description:</dt><dd><?php echo $stall_2['description']; ?></dd>
                         <dt>Announcement:</dt><dd><?php echo $stall_2['announcement']; ?></dd>
-                        <dt>Opening Hours:</dt><dd><?php echo $stall_2['opening_hour_start']; ?> to <?php echo $stall_2['opening_hour_end']; ?></dd>
+                        <dt>Opening Hours:</dt><dd><?php echo date("h:i A", strtotime($stall_2['opening_hour_start'])); ?> to <?php echo date("h:i A", strtotime($stall_2['opening_hour_end'])); ?></dd>
                         <dt>Contact Number:</dt><dd><?php echo $stall_2['contact_no']; ?></dd>
                         <dt>Unit Number:</dt><dd><?php echo $stall_2['unit_no']; ?></dd>
                     </dl>
