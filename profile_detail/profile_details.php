@@ -74,7 +74,7 @@ width: fit-content;
 	<form action="edit_profiledetails.php" method="get">
     <table class="register_table">
         <th colspan="2">Profile Details</th>
-        <tr>
+        <!-- <tr>
             <td>
                 <section id='first_name_section'>
                 <label>First name: </label><input type='text' size= '20' id='firstname' name='firstname' placeholder="<?php echo $row['firstname'];?>" readonly>
@@ -86,37 +86,37 @@ width: fit-content;
                 <label>Last name: </label><input type="text" size= "20" id="lastname" name="lastname" placeholder="<?php echo $row['lastname'];?>" readonly>
                 </section>
             </td>
-        </tr>
+        </tr> -->
         <tr>
             <td align="left" colspan="2"><label>Username: </label><input type="text" size= "20" id="username" name="username" placeholder="<?php echo $row['username'];?>" readonly></br></td>
         </tr>
         <tr>
             <td colspan="2">
-            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" name="email" placeholder="<?php echo $row['e_mail'];?>" readonly>
+            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" name="email" placeholder="<?php echo $row['email'];?>" readonly>
             </section></td>
         </tr>
         <tr>
             <td colspan="2">
-            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id='phoneno' name='phoneno' maxlength='8' placeholder="<?php echo $row['mobile_no'];?>"readonly>
+            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id='phoneno' name='phoneno' maxlength='8' placeholder="<?php echo $row['contact_no'];?>"readonly>
             </section> 
             </td>
         </tr>
         <tr>
-            <td colspan="2"><label>Address 1: </label><input type="text" size= "20" id="addr1" name="addr1" placeholder="<?php echo $row['Address1'];?>" readonly></td>
+            <td colspan="2"><label>Address: </label><input type="text" size= "20" id="addr1" name="addr1" placeholder="<?php echo $row['address'];?>" readonly></td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td colspan="2"><label>Address 2: </label><input type="text" size= "20" id="addr2" name="addr2" placeholder="<?php echo $row['Address2'];?>" readonly></td>
         </tr>
         <tr>
             <td colspan="2"><label>Address 3: </label><input type="text" size= "20" id="addr3" name="addr3" placeholder="<?php echo $row['Address3'];?>" readonly></td>
-        </tr>
+        </tr> -->
         <tr>
         <td colspan="2"> 
         <div class='payment_title'><center>Payment Information</center></div><br>
         <div id='img_wrapper' style="padding-bottom:5px;"><label></label> <img src="../common/img/credit_card_logos.jpg" alt='Acceptable Credit Cards' width="144" height="34"></div>
             <section id='card_num_section' style="padding-bottom:10px;">
                 <label>Card number:</label>
-                <input type="text" maxlength="19"  id='card_num' name='card_num' placeholder="<?php echo $row['credit_card'];?>" readonly>
+                <input type="text" maxlength="19"  id='card_num' name='card_num' placeholder="<?php echo $row['credit_card_no'];?>" readonly>
             </section>
             <section id='card_name_section' style="padding-bottom:10px;">
                 <label>Name on card:</label>
@@ -125,7 +125,7 @@ width: fit-content;
             <section id='expiry_security_section' style="padding-bottom:10px;">
                 <aside id='expiry_section'>
                 <label>Expiry date:</label>
-                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" placeholder="<?php echo $row['expirydate'];?>" readonly>
+                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" placeholder="<?php echo $row['expiry_date'];?>" readonly>
             </aside></section>
             <aside id='security_section' style="padding-bottom:10px;">
                 <label>Security code:</label>
