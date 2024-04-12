@@ -1,0 +1,9 @@
+{
+    "name": "d1360482/bedok_85_nus",
+    "autoload": {
+        "psr-4": {
+            "D1360482\\Bedok85Nus\\": "src/"
+        }
+    },
+    "require": {}
+}

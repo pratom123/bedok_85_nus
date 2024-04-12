@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="1" assertions="1" errors="0" failures="1" skipped="0" time="0.001211">
+    <testsuite name="EmailTest" file="C:\xampp\htdocs\bedok_85_nus\tests\EmailTest.php" tests="1" assertions="1" errors="0" failures="1" skipped="0" time="0.001211">
+      <testcase name="testCanBeCreatedFromValidEmail" file="C:\xampp\htdocs\bedok_85_nus\tests\EmailTest.php" line="9" class="EmailTest" classname="EmailTest" assertions="1" time="0.001211">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">EmailTest::testCanBeCreatedFromValidEmail&#13;
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'test'
++'user@example.com'
+&#13;
+C:\xampp\htdocs\bedok_85_nus\tests\EmailTest.php:16</failure>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>
