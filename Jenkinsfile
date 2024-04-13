@@ -28,7 +28,7 @@ pipeline {
                     reportTitles: ''
                 ])
                 discoverGitReferenceBuild()
-                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'build/logs/cobertura.xml']])
+                // recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'build/logs/cobertura.xml']])
             }
         }
     }
