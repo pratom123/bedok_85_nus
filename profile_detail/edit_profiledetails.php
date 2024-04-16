@@ -7,16 +7,7 @@
     include '../login/logindb.php';
     include 'insertprofile_detail.php';
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "bedok_85";
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-    }
+    include '../common/connectDB.php';
 
     $pw=$_GET['password'];
 
@@ -29,7 +20,7 @@
     INNER JOIN credit_card
     WHERE username ='$getusername' 
     AND c_user_id = user_id" ;
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($db, $sql);
 
     if ($result) {
         $row = mysqli_fetch_assoc($result);
@@ -41,7 +32,7 @@
     }
 
     }
-mysqli_close($conn);
+mysqli_close($db);
 ?>
 <link rel="stylesheet" href="../common/externalCSS1.css">
 <link rel="stylesheet" href="../common/externalCSS.css">
