@@ -1,17 +1,6 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bedok_85_nus";
-
-// Create connection(
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-}
+include '../common/connectDB.php';
 
 
 $firstname=$_GET['firstname'];
@@ -31,7 +20,7 @@ $expirydate=$_GET['expiry_date'];
 
 
 $sql = "SELECT username from user WHERE username ='$username'";
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($db, $sql);
 
 if(mysqli_num_rows($result) > 0){
 
@@ -48,12 +37,12 @@ if(mysqli_num_rows($result) > 0){
     header("refresh:0;url=registration.php");
 }
 
-mysqli_close($conn);    
+mysqli_close($db);    
 
     function create_account($firstname, $lastname, $username, $password, $email, $phoneno, $addr1,$addr2,$addr3, $creditcard, $creditname, $cv2, $expirydate) {
-        $conn = mysqli_connect("localhost", "root", "", "Bedok_85_nus");
+        $db = mysqli_connect("localhost", "root", "", "Bedok_85_nus");
     
-        if (!$conn) {
+        if (!$db) {
             die("Connection failed: " . mysqli_connect_error());
             return;
         }
@@ -64,32 +53,32 @@ mysqli_close($conn);
         // Insert into the user table
         $sqlUser = "INSERT INTO user (username, password, contact_no, email, address, user_type) VALUES ('$username', '$password', '$phoneno', '$email', '$address', 'customer')";
         
-        if (!mysqli_query($conn, $sqlUser)) {
-            echo "Failed to create user account: " . mysqli_error($conn);
-            mysqli_close($conn);
+        if (!mysqli_query($db, $sqlUser)) {
+            echo "Failed to create user account: " . mysqli_error($db);
+            mysqli_close($db);
             return;
         }
     
         // Get the last inserted user_id
-        $userId = mysqli_insert_id($conn);
+        $userId = mysqli_insert_id($db);
     
         // Insert into the customer table
         $sqlCustomer = "INSERT INTO customer (c_user_id, first_name, last_name) VALUES ('$userId', '$firstname', '$lastname')";
         
-        if (!mysqli_query($conn, $sqlCustomer)) {
-            echo "Failed to create customer profile: " . mysqli_error($conn);
+        if (!mysqli_query($db, $sqlCustomer)) {
+            echo "Failed to create customer profile: " . mysqli_error($db);
             
         }
     
         // Insert into the credit_card table
         $sqlCreditCard = "INSERT INTO credit_card (c_user_id, credit_card_no, card_name, cv2, expiry_date) VALUES ('$userId', '$creditcard', '$creditname', '$cv2', '$expirydate')";
         
-        if (!mysqli_query($conn, $sqlCreditCard)) {
-            echo "Failed to add credit card details: " . mysqli_error($conn);
+        if (!mysqli_query($db, $sqlCreditCard)) {
+            echo "Failed to add credit card details: " . mysqli_error($db);
           
         }
     
-        mysqli_close($conn);
+        mysqli_close($db);
     }
     
 ?>
