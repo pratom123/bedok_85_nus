@@ -98,7 +98,8 @@ include '../common/initialize_all.php';
             INNER JOIN `user` u
             ON c.c_user_id = u.user_id
             LEFT JOIN delivery_address da
-            ON q3.order_id = da.order_id;";
+            ON q3.order_id = da.order_id
+            ORDER BY q3.order_id desc;";
             
             $result = $db->query($query);
 
