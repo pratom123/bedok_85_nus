@@ -254,6 +254,7 @@ include 'function_definition.php';
     <?php 
     
         if(isset($_GET['isUpdateSuccess'])) {
+            // echo "emailCustomerOrderStatusResult" . $_SESSION["emailCustomerOrderStatusResult"];
             if($_GET['isUpdateSuccess']) 
                 $msg = 'Update of selected order successful! An email has been sent to your customer';
                 else
@@ -262,6 +263,7 @@ include 'function_definition.php';
             echo "<script type='text/javascript'>alert('" . $msg . "')</script>";
 
             $_GET['isUpdateSuccess'] = NULL;
+            $_SESSION["emailCustomerOrderStatusResult"] = NULL;
         }
 
         if (isset($_GET['isUpdateStallDetailsSuccess'])) {
@@ -316,7 +318,7 @@ include 'function_definition.php';
                             <th>Delivery Address</th>
                             <th>Email Address</th>
                             <th>Phone Number</th>
-                            <th>Remarks</th>
+                            <th>Stall Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -337,19 +339,16 @@ include 'function_definition.php';
                                 <td>
                                     <select class='order_status' name='order_status'>
                                         <option ";                                      
-                                        if($order[$i]['order_status']=='Cooking') echo 'selected'; echo ">Cooking</option>
+                                        if($order[$i]['order_status']=='Pending') echo 'selected'; echo ">Pending</option>
                                         <option ";
+                                        // if($order[$i]['order_status']=='Confirmed') echo 'selected';
+                                        // echo ">Confirmed</option>
+                                        // <option ";
                                         if($order[$i]['order_status']=='Ready') echo 'selected';
                                         echo ">Ready</option>
                                         <option ";
-                                        if($order[$i]['order_status']=='Collected') echo 'selected';
-                                        echo ">Collected</option>
-                                        <option ";
-                                        if($order[$i]['order_status']=='Delivering') echo 'selected';
-                                        echo ">Delivering</option>
-                                        <option ";
-                                        if($order[$i]['order_status']=='Delivered') echo 'selected';
-                                        echo ">Delivered</option>
+                                        if($order[$i]['order_status']=='Completed') echo 'selected';
+                                        echo ">Completed</option>
                                         <option ";
                                         if($order[$i]['order_status']=='Cancelled') echo 'selected';
                                         echo ">Cancelled</option>
@@ -362,9 +361,12 @@ include 'function_definition.php';
                                 <td>"; echo !empty($order[$i]['address'])? $order[$i]['address']: '—'; echo "</td>
                                 <td>" . $order[$i]['e_mail'] ."</td>
                                 <td>" . $order[$i]['mobile_no'] ."</td>
-                                <td>
-                                    <textarea class='remark' rows='3' cols='10' placeholder='Max characters: 1000' maxlength='1000' value='' name='remark'></textarea>
-                                </td>
+                                <td>";
+                                    if(isset($order[$i]['remark']))
+                                        echo "<textarea class='remark' rows='3' cols='10' placeholder='Max characters: 1000' maxlength='1000' name='remark'>" . trim($order[$i]['remark']) . "</textarea>";
+                                        else
+                                            echo "<textarea class='remark' rows='3' cols='10' placeholder='Max characters: 1000' maxlength='1000' name='remark'></textarea>";
+                                echo "</td>
                             </form>
                         </tr>  
                             ";
@@ -425,7 +427,12 @@ include 'function_definition.php';
                 </section>
                 <section id='opening_hour'>
                     <div class='stall_detail_label'>Opening Hours:&nbsp;</div>
-                    <textarea  rows='4' cols='30' placeholder='Max characters: 50' maxlength="50" name='opening_hour'><?php echo (isset($stall_details['opening_hour']))? $stall_details['opening_hour']:''; ?></textarea>
+                    <div>
+                        <input type="time" id="appt" name="opening_hour_start" value="<?php echo (isset($stall_details['opening_hour_start']))? $stall_details['opening_hour_start']:''; ?>">
+                        &nbsp;to&nbsp;
+                        <input type="time" id="appt" name="opening_hour_end" value="<?php echo (isset($stall_details['opening_hour_end']))? $stall_details['opening_hour_end']:''; ?>">
+                    </div>
+                    <!-- <textarea  rows='4' cols='30' placeholder='Max characters: 50' maxlength="50" name='opening_hour'><?php echo (isset($stall_details['opening_hour']))? $stall_details['opening_hour']:''; ?></textarea> -->
                 </section>
                 <section id='description'>
                     <div class='stall_detail_label'>Description:&nbsp;</div>

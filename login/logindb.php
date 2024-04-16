@@ -1,15 +1,6 @@
 <?php
 // include '../common/initialize_all.php';
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bedok_85_nus";
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-}
+include '../common/connectDB.php';
 
 session_start();
 
@@ -21,7 +12,7 @@ if( isset($_POST['username']) && isset($_POST['password']))
     $sql = 'SELECT * from user '
             ."WHERE username ='$username'"
             . "and password ='$password'";
-    $result = $conn->query($sql);
+    $result = $db->query($sql);
     if($result->num_rows>0)
     {
         $loginst=1;
@@ -37,7 +28,7 @@ if( isset($_POST['username']) && isset($_POST['password']))
             $query = "SELECT subquery.stall_id, stall.stall_name FROM stall, (SELECT stall_id FROM admin WHERE s_user_id = " . $row['user_id'] . ") subquery
             WHERE stall.stall_id = subquery.stall_id;";
 
-            $result = $conn->query($query);
+            $result = $db->query($query);
 
             if ($result->num_rows == 1) {
                 // identify the stall id of the admin user
@@ -62,7 +53,7 @@ if( isset($_POST['username']) && isset($_POST['password']))
     }
 
 
-    mysqli_close($conn);
+    mysqli_close($db);
 }
 ?>
 

@@ -39,12 +39,13 @@ include '../common/initialize_all.php';
             // $stall_name = $_GET['stall_name'];
             $announcement = $_GET['announcement'];
             $description = $_GET['description'];
-            $opening_hour = $_GET['opening_hour'];
+            $opening_hour_start = date("Y-m-d H:i:s", strtotime(date("Y-m-d") . " " . $_GET['opening_hour_start']));
+            $opening_hour_end = date("Y-m-d H:i:s", strtotime(date("Y-m-d") . " " . $_GET['opening_hour_end']));
             // $contact_no = $_GET['contact_no'];
             // $unit_no = $_GET['unit_no'];
             $open_status = $_GET['open_status'];
 
-            $isUpdateStallDetailsSuccess = updateDBStallDetails($stall_id, $announcement, $description, $opening_hour, $open_status);
+            $isUpdateStallDetailsSuccess = updateDBStallDetails($stall_id, $announcement, $description, $opening_hour_start, $opening_hour_end, $open_status);
 
             if($isUpdateStallDetailsSuccess)
                 header("Location: admin.php?isUpdateStallDetailsSuccess=true");

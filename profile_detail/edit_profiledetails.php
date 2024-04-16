@@ -7,16 +7,7 @@
     include '../login/logindb.php';
     include 'insertprofile_detail.php';
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "bedok_85";
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-    }
+    include '../common/connectDB.php';
 
     $pw=$_GET['password'];
 
@@ -25,12 +16,15 @@
     {
     $getusername = $_SESSION['valid_user'];
 
-    $sql = "SELECT * from Account_information WHERE username ='$getusername'";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * from user
+    INNER JOIN credit_card
+    WHERE username ='$getusername' 
+    AND c_user_id = user_id" ;
+    $result = mysqli_query($db, $sql);
 
     if ($result) {
         $row = mysqli_fetch_assoc($result);
-        if ($row['password_info'] != $pw){
+        if ($row['password'] != $pw){
             echo "<script>alert('Passwords do not match! Please try again.');</script>";
             header("refresh:0;url=profile_details.php");
         }
@@ -38,7 +32,7 @@
     }
 
     }
-mysqli_close($conn);
+mysqli_close($db);
 ?>
 <link rel="stylesheet" href="../common/externalCSS1.css">
 <link rel="stylesheet" href="../common/externalCSS.css">
@@ -121,7 +115,7 @@ include '../common/overlay.php';
 	<form action="update_profiledetails.php" method="get" id='updateform'>
     <table class="register_table">
         <th colspan="2">Profile Details</th>
-        <tr>
+        <!-- <tr>
             <td>
                 <section id='first_name_section'>
                 <label>First name: </label><input type='text' size= '20' id='firstname' name='firstname' value="<?php echo $row['firstname'];?>" readonly>
@@ -133,7 +127,7 @@ include '../common/overlay.php';
                 <label>Last name: </label><input type="text" size= "20" id="lastname" name="lastname" value="<?php echo $row['lastname'];?>" readonly>
                 </section>
             </td>
-        </tr>
+        </tr> -->
         <tr>
             <td align="left" colspan="2"><label>Username: </label><input type="text" size= "20" id="username" name="username" value="<?php echo $row['username'];?>" readonly></br></td>
         </tr>
@@ -142,25 +136,19 @@ include '../common/overlay.php';
         </tr>
         <tr>
             <td colspan="2">
-            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" onfocus="if(this.value == '<?php echo $row['e_mail'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['e_mail'];?>' }" name="email" value="<?php echo $row['e_mail'];?>" >
+            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" onfocus="if(this.value == '<?php echo $row['email'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['email'];?>' }" name="email" value="<?php echo $row['email'];?>" >
             <label><div class="invalid_error_msg_email">Invalid Email format!</label></div>
             </section></td>
         </tr>
         <tr>
             <td colspan="2">
-            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id="phoneno" onfocus="if(this.value == '<?php echo $row['mobile_no'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['mobile_no'];?>' }" name="phoneno" value="<?php echo $row['mobile_no'];?>" maxlength="8">
+            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id="phoneno" onfocus="if(this.value == '<?php echo $row['contact_no'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['contact_no'];?>' }" name="phoneno" value="<?php echo $row['contact_no'];?>" maxlength="8">
             <label><div class="invalid_error_msg_phoneno">Number digits only!</label></div>
             </section> 
             </td>
         </tr>
         <tr>
-            <td colspan="2"><label>Address 1: </label><input type="text" size= "20" id="addr1" name="addr1" onfocus="if(this.value == '<?php echo $row['Address1'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['Address1'];?>' }"value="<?php echo $row['Address1'];?>" ></td>
-        </tr>
-        <tr>
-            <td colspan="2"><label>Address 2: </label><input type="text" size= "20" id="addr2" name="addr2" onfocus="if(this.value == '<?php echo $row['Address2'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['Address2'];?>' }" value="<?php echo $row['Address2'];?>" ></td>
-        </tr>
-        <tr>
-            <td colspan="2"><label>Address 3: </label><input type="text" size= "20" id="addr3" name="addr3" onfocus="if(this.value == '<?php echo $row['Address3'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['Address3'];?>' }"value="<?php echo $row['Address3'];?>" ></td>
+            <td colspan="2"><label>Address 1: </label><input type="text" size= "20" id="addr1" name="addr1" onfocus="if(this.value == '<?php echo $row['address'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['address'];?>' }"value="<?php echo $row['address'];?>" ></td>
         </tr>
         <tr>
         <td colspan="2"> 
@@ -168,7 +156,7 @@ include '../common/overlay.php';
         <div id='img_wrapper' style="padding-bottom:5px;"><label></label> <img src="../common/img/credit_card_logos.jpg" alt='Acceptable Credit Cards' width="144" height="34"></div>
             <section id='card_num_section' style="padding-bottom:10px;">
                 <label>Card number:</label>
-                <input type="text" maxlength="19"  id='card_num' name='card_num' onfocus="if(this.value == '<?php echo $row['credit_card'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['credit_card'];?>' }" value="<?php echo $row['credit_card'];?>">
+                <input type="text" maxlength="19"  id='card_num' name='card_num' onfocus="if(this.value == '<?php echo $row['credit_card_no'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['credit_card_no'];?>' }" value="<?php echo $row['credit_card_no'];?>">
                 <label><div class="invalid_error_msg">Invalid card number!</label></div>
             </section>
             <section id='card_name_section' style="padding-bottom:10px;">
@@ -179,7 +167,7 @@ include '../common/overlay.php';
             <section id='expiry_security_section' style="padding-bottom:10px;">
                 <aside id='expiry_section'>
                 <label>Expiry date:</label>
-                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" onfocus="if(this.value == '<?php echo $row['expirydate'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['expirydate'];?>' }" value="<?php echo $row['expirydate'];?>">
+                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" onfocus="if(this.value == '<?php echo $row['expiry_date'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['expiry_date'];?>' }" value="<?php echo $row['expiry_date'];?>">
                 <label><div class="invalid_error_msg">Invalid date!</label></div>
             </aside></section>
             <aside id='security_section' style="padding-bottom:10px;">
