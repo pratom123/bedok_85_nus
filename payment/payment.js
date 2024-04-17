@@ -28,11 +28,14 @@ function toggleAddressSection(event) {
 
     var inputs = document.getElementById('address_section').getElementsByTagName('input');
 
+    const address1_radio = document.getElementById('address1_radio');
+
     console.log(radio_clicked.value);
     if (radio_clicked.id == 'self_pickup') {
         for(var i=0; i<inputs.length;i++) {
             // disable each inputs in address section
             inputs[i].disabled = true;
+            inputs[i].checked = false;
         }
     } else if (radio_clicked.id == 'delivery') {
         // enable each inputs in address section
@@ -40,6 +43,7 @@ function toggleAddressSection(event) {
             // enable each inputs in address section
             inputs[i].disabled = false;
         }
+        inputs[0].checked = true;
     }
 }
 
