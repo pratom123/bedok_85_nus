@@ -28,8 +28,6 @@ function toggleAddressSection(event) {
 
     var inputs = document.getElementById('address_section').getElementsByTagName('input');
 
-    const address1_radio = document.getElementById('address1_radio');
-
     console.log(radio_clicked.value);
     if (radio_clicked.id == 'self_pickup') {
         for(var i=0; i<inputs.length;i++) {
