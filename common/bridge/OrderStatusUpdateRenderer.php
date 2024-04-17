@@ -15,7 +15,7 @@ class OrderStatusUpdateRenderer implements Renderer
         <br/><u><b>Food Details</b></u><br/>
         " . $data['food_details'] . "
         <br/>
-        <br/><b>Total Cost:</b> \$" . $data['total_cost'] . "
+        <b>Total Cost:</b> \$" . $data['total_cost'] . "
         <br/><b>Collection Mode: ";
         if ($data['collection_mode']=='Delivery') {
             $message .= "Delivery - " . $data['address'];

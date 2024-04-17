@@ -225,7 +225,14 @@ function emailCustomerReceipt($order_id) {
         SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/>') food_details
         FROM
         (
-            SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>-', q1.special_instruction, '<br/>') as item_details
+            SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status,
+            CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>',
+            CASE 
+				WHEN q1.special_instruction != ''
+				THEN CONCAT('-', q1.special_instruction, '<br/>')
+                ELSE ''
+            END
+            ) as item_details
             FROM
             (
                 SELECT stall_food_id_query.customer_id, stall_food_id_query.datetime_ordered, stall_food_id_query.order_cost, stall_food_id_query.collection_mode, f_out.food_name, stall_food_id_query.order_id, stall_food_id_query.order_item_id, stall_food_id_query.quantity, stall_food_id_query.order_status, 
