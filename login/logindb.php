@@ -2,7 +2,8 @@
 // include '../common/initialize_all.php';
 include '../common/connectDB.php';
 
-session_start();
+if(!isset($_SESSION))
+    session_start();
 
 if( isset($_POST['username']) && isset($_POST['password']))
 {

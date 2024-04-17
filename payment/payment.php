@@ -459,7 +459,7 @@
                                                     <div class="invalid_error_msg" id='address_1_error_msg'>Invalid address!</div>
                                                 </span>
                                             </div>
-                                            <div class="address_num_section">
+                                            <!-- <div class="address_num_section">
                                                 <div class="address_left"><input type='radio' name='address' class="address_radio" disabled></div>
                                                 <span class="address_right">
                                                     <div><input type='text' placeholder="Address 2" disabled class='address_text' maxlength="100" value='<?php echo (isset($data['Address2']) && !empty($data['Address2']))? $data['Address2']:''; ?>'></div>
@@ -472,7 +472,7 @@
                                                     <div><input type='text' placeholder="Address 3" disabled class='address_text' maxlength="100" value='<?php echo (isset($data['Address3']) && !empty($data['Address3']))? $data['Address3']:''; ?>'></div>
                                                     <div class="invalid_error_msg">Invalid address!</div>
                                                 </span>
-                                            </div>
+                                            </div> -->
                                         </td>
                                     </tr>
                                 </table>

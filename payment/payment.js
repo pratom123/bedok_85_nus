@@ -33,6 +33,7 @@ function toggleAddressSection(event) {
         for(var i=0; i<inputs.length;i++) {
             // disable each inputs in address section
             inputs[i].disabled = true;
+            inputs[i].checked = false;
         }
     } else if (radio_clicked.id == 'delivery') {
         // enable each inputs in address section
@@ -40,6 +41,7 @@ function toggleAddressSection(event) {
             // enable each inputs in address section
             inputs[i].disabled = false;
         }
+        inputs[0].checked = true;
     }
 }
 

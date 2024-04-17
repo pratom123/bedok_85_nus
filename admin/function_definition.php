@@ -1,17 +1,6 @@
 <?php 
-
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-
-require '../PHPMailer/src/Exception.php';
-require '../PHPMailer/src/PHPMailer.php';
-require '../PHPMailer/src/SMTP.php';
-
-require '../config.php';
-
+require_once '../common/bridge/Email.php';
+require_once '../common/bridge/OrderStatusUpdateRenderer.php';
 session_start();
 
 include '../common/initialize_all.php';
@@ -54,7 +43,13 @@ include '../common/initialize_all.php';
                 SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/>') food_details, q2.stall_comment
                 FROM
                 (
-                    SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>-', q1.special_instruction, '<br/>') as item_details, q1.stall_comment
+                    SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>',
+                    CASE 
+                        WHEN q1.special_instruction != ''
+                        THEN CONCAT('-', q1.special_instruction, '<br/>')
+                        ELSE ''
+                    END
+                    ) as item_details, q1.stall_comment
                     FROM
                     (
                         SELECT stall_food_id_query.customer_id, stall_food_id_query.datetime_ordered, stall_food_id_query.order_cost, stall_food_id_query.collection_mode, f_out.food_name, stall_food_id_query.order_id, stall_food_id_query.order_item_id, stall_food_id_query.quantity, stall_food_id_query.order_status, 
@@ -135,20 +130,20 @@ include '../common/initialize_all.php';
 
         $stall_id = $_SESSION['stall_id'];
 
-        $order = array(
-            'order_id' => '',
-            'order_datetime' => '',
-            'total_cost' => '',
-            'food_details' => '',
-            'collection_mode' => '',
-            'order_status' => '',
-            'firstname' => '',
-            'lastname' => '',
-            'address' => '',
-            'e_mail' => '',
-            'mobile_no' => '',
-            'remark' => ''
-        );
+        // $order = array(
+        //     'order_id' => '',
+        //     'order_datetime' => '',
+        //     'total_cost' => '',
+        //     'food_details' => '',
+        //     'collection_mode' => '',
+        //     'order_status' => '',
+        //     'firstname' => '',
+        //     'lastname' => '',
+        //     'address' => '',
+        //     'e_mail' => '',
+        //     'mobile_no' => '',
+        //     'remark' => ''
+        // );
         // get price of the specified order no. from a stall
         $query = "SELECT sum(item_cost) AS sum_of_cost FROM order_item WHERE order_id = $order_id AND stall_id = $stall_id";
         $result = $db->query($query);
@@ -163,10 +158,16 @@ include '../common/initialize_all.php';
         u.email, u.contact_no, c.first_name, c.last_name, q3.datetime_ordered, q3.order_cost, q3.collection_mode, q3.order_id, q3.order_status, q3.food_details, q3.stall_comment, da.address
 		FROM
         ( -- food details
-            SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/><br/>') food_details, q2.stall_comment
+            SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/>') food_details, q2.stall_comment
             FROM
             (
-                SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>-', q1.special_instruction) as item_details, q1.stall_comment
+                SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status,  CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>',
+				CASE 
+					WHEN q1.special_instruction != ''
+					THEN CONCAT('-', q1.special_instruction, '<br/>')
+					ELSE ''
+				END
+				) as item_details, q1.stall_comment
                 FROM
                 (
                     SELECT stall_food_id_query.customer_id, stall_food_id_query.datetime_ordered, stall_food_id_query.order_cost, stall_food_id_query.collection_mode, f_out.food_name, stall_food_id_query.order_id, stall_food_id_query.order_item_id, stall_food_id_query.quantity, stall_food_id_query.order_status, 
@@ -217,18 +218,7 @@ include '../common/initialize_all.php';
 
         if ($result && $result->num_rows == 1) {
             $row = $result->fetch_assoc();
-            $order['order_id'] = $row['order_id'];
-            $order['order_datetime'] = $row['datetime_ordered'];
-            // $order['total_cost'] = $row['order_cost'];
-            $order['food_details'] = $row['food_details'];
-            $order['collection_mode'] = $row['collection_mode'];
-            $order['order_status'] = $row['order_status'];
-            $order['firstname'] = $row['first_name'];
-            $order['lastname'] = $row['last_name'];
-            $order['address'] = $row['address'];
-            $order['e_mail'] = $row['email'];
-            $order['mobile_no'] = $row['contact_no'];
-            $order['remark'] = $row['stall_comment'];
+            $order += $row + array('stall_name' => $_SESSION['stall_name']);
 
             return $order;
         } else {
@@ -237,107 +227,17 @@ include '../common/initialize_all.php';
     }
 
     function emailCustomerOrderStatus($order_id) {
-        $stall_name = $_SESSION['stall_name'];
         include '../common/connectDB.php';
 
         $order = retrieveOrderByOrderID($order_id);
 
         if (!$order)    //error, return false
             return false;
-
-        $customer_email = $order['e_mail'];
-        $customer_name = $order['firstname'] . ' ' . $order['lastname'];
-        $order_datetime = $order['order_datetime'];
-        $formatted_food_details = $order['food_details'];
-        $order_total_cost = $order['total_cost'];
-        $order_status = $order['order_status'];
-        $collection_mode = $order['collection_mode'];
-        $delivery_address = $order['address'];
-        $remark = $order['remark'];
-
-        // code below formats the delimited order food details strings into a display string with new line
-        // $order_food_details = explode('<br/>', $order_food_details);
-        // $temp = $order_food_details;
-
-        // $formatted_food_details = '';
-        // for($i=0;$i<count($temp); $i++) {
-        //     if (strpos($temp[$i], '.')) {
-        //         $add_on_strings = explode('.', $temp[$i]);
-        //         // var_dump($add_on_strings);
-        //         for($j=0;$j<count($add_on_strings); $j++) {
-        //             $formatted_food_details = $formatted_food_details . "\n-" . $add_on_strings[$j];
-        //         }
-        //     } else
-        //         $formatted_food_details = $formatted_food_details . "\n" . $temp[$i];
-        // }
-
-        // ----============
-
-        $subject = 'Bedok 85: ' . $stall_name . " Order Update";
-
-
-        $message = "Your Order No. <b>". $order_id . "</b> status has been updated to <b>$order_status</b>.
-        <br/>
-        <br/><b>Customer Name:</b> $customer_name
-        <br/><b>Order Date/Time:</b> " . $order_datetime . "
-        <br/>
-        <br/><u><b>Food Details</b></u><br/>
-        " . $formatted_food_details . "
-        <br/>
-        <br/><b>Total Cost:</b> \$" . $order_total_cost . "
-        <br/><b>Collection Mode: ";
-        if ($collection_mode=='Delivery') {
-            $message .= "Delivery - $delivery_address";
-        } else
-            $message .= "Self-pickup";
-
-        $message .= "</b><br/><br/>";
-        $message .= "<b>Stall Comment:</b><br/>";
-        $message .= ($remark === NULL || $remark === '') ? "NIL" : $remark;
-
-        // echo $message;
-
-        //Create an instance; passing `true` enables exceptions
-        $mail = new PHPMailer(true);
-
-        try {
-            //Server settings
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp-mail.outlook.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = EMAIL_USERNAME;                     //SMTP username
-            $mail->Password   = EMAIL_PASSWORD;                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
-            $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-            //Sender
-            $mail->setFrom(EMAIL_USERNAME);
-            //Recipient(s)
-            $mail->addAddress($customer_email);     //Add a recipient
-            // $mail->addAddress('ellen@example.com');               //Name is optional
-            // $mail->addReplyTo('info@example.com', 'Information');
-            // $mail->addCC('cc@example.com');
-            // $mail->addBCC('bcc@example.com');
-
-            //Attachments
-            // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = $subject;
-            $mail->Body    = $message;
-            $mail->AltBody = $message;
-
-            $_SESSION["emailCustomerOrderStatusResult"] = $mail->send();
-            return true;
-        } catch (Exception $e) {
-            $_SESSION["emailCustomerOrderStatusResult"] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            return false;
-        }
-
-        // ----============
+        
+        $orderStatusUpdateRenderer = new OrderStatusUpdateRenderer();
+        $email = new Email($orderStatusUpdateRenderer, $order);
+        $email->setContent();
+        return $email->send();
     }
     
 
