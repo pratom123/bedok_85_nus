@@ -1,14 +1,13 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-
 class ValidateTest extends TestCase {
     public function testValidCardNumber() {
         // Arrange
         $cardNum = '1234-5678-9012-3456';
 
         // Act
-        $isValid = CardNumberValidator::validateCardNum($cardNum);
+        $isValid = Validate::validateCardNum($cardNum);
 
         // Assert
         $this->assertTrue($isValid);
@@ -19,7 +18,7 @@ class ValidateTest extends TestCase {
         $cardNum = 'invalid_card_number';
 
         // Act
-        $isValid = CardNumberValidator::validateCardNum($cardNum);
+        $isValid = Validate::validateCardNum($cardNum);
 
         // Assert
         $this->assertFalse($isValid);
@@ -30,7 +29,7 @@ class ValidateTest extends TestCase {
         $cardName = 'John Doe';
 
         // Act
-        $isValid = CardNameValidator::validateCardName($cardName);
+        $isValid = Validate::validateCardName($cardName);
 
         // Assert
         $this->assertTrue($isValid);
@@ -41,7 +40,7 @@ class ValidateTest extends TestCase {
         $cardName = '12345'; // Not only alphabets
 
         // Act
-        $isValid = CardNameValidator::validateCardName($cardName);
+        $isValid = Validate::validateCardName($cardName);
 
         // Assert
         $this->assertFalse($isValid);
