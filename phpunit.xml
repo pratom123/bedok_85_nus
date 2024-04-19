@@ -5,5 +5,7 @@
         </testsuite>
     </testsuites>
 
-    <log type="junit" target="build/reports/phpunit.xml"/>
+    <logging>
+        <log type="junit" target="build/reports/phpunit.xml"/>
+    </logging>
 </phpunit>
