@@ -15,7 +15,7 @@ final class UserRepositoryTest {
         $mockDb->method('bind_param')->willReturn(true);
         $mockDb->method('execute')->willReturn(true);
 
-        $userRepository = new User($mockDb); // Create an instance of the class, passing the mock DB
+        $userRepository = new UserRepository($mockDb); // Create an instance of the class, passing the mock DB
         
         // Act
         $user = $userRepository->findById(1); // Call the findById() function
