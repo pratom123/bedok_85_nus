@@ -1,15 +1,6 @@
 <?php
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-
-require '../PHPMailer/src/Exception.php';
-require '../PHPMailer/src/PHPMailer.php';
-require '../PHPMailer/src/SMTP.php';
-
-require '../config.php';
+require_once '../common/bridge/Email.php';
+require_once '../common/bridge/CustomerReceiptRenderer.php';
 
 function retrieveDataFromDb() {
     if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])) {
@@ -234,7 +225,14 @@ function emailCustomerReceipt($order_id) {
         SELECT q2.customer_id, q2.datetime_ordered, q2.order_cost, q2.collection_mode, q2.order_id, q2.order_status, GROUP_CONCAT(item_details SEPARATOR '<br/>') food_details
         FROM
         (
-            SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status, CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>-', q1.special_instruction, '<br/>') as item_details
+            SELECT q1.customer_id, q1.datetime_ordered, q1.order_cost, q1.collection_mode, q1.order_id, q1.order_status,
+            CONCAT(q1.quantity, 'x ', q1.food_name, '<br/>', q1.food_details, '<br/>',
+            CASE 
+				WHEN q1.special_instruction != ''
+				THEN CONCAT('-', q1.special_instruction, '<br/>')
+                ELSE ''
+            END
+            ) as item_details
             FROM
             (
                 SELECT stall_food_id_query.customer_id, stall_food_id_query.datetime_ordered, stall_food_id_query.order_cost, stall_food_id_query.collection_mode, f_out.food_name, stall_food_id_query.order_id, stall_food_id_query.order_item_id, stall_food_id_query.quantity, stall_food_id_query.order_status, 
@@ -261,7 +259,7 @@ function emailCustomerReceipt($order_id) {
                 ON oi.stall_id = s.stall_id
                 INNER JOIN food f
                 ON oi.food_id = f.food_id
-                WHERE o.order_id = 76
+                WHERE o.order_id = $order_id
                 GROUP BY oi.food_id, oi.stall_id) stall_food_id_query
                 ON f_out.stall_id = stall_food_id_query.stall_id
                 AND f_out.food_id = stall_food_id_query.food_id
@@ -288,94 +286,12 @@ function emailCustomerReceipt($order_id) {
     if ($result && $result->num_rows == 1) {
         // retrieval of latest order info from database is successful
         $order = $result -> fetch_array(MYSQLI_ASSOC);  //fetch the entire row from mysql as an associative array
-
-        //---------------------After getting latest order info from mysql, email customer-----------------
-        $customer_email = $order['email'];
-        $customer_name = $order['first_name'] . ' ' . $order['last_name'];
-        $order_datetime = $order['datetime_ordered'];
-        $formatted_food_details = $order['food_details'];
-        $order_total_price = $order['order_cost'];
-        $order_status = $order['order_status'];
-        $collection_mode = $order['collection_mode'];
-        $delivery_address = $order['address'];
-        // $remark = $order['remark'];
-
-        // code below formats the delimited order food details strings into a display string with new line
-        // $order_food_details = explode('<br/>', $order_food_details);
-        // $temp = $order_food_details;
-
-        // $formatted_food_details = '';
-        // for($i=0;$i<count($temp); $i++) {
-        //     if (strpos($temp[$i], '.')) {
-        //         $add_on_strings = explode('.', $temp[$i]);
-        //         // var_dump($add_on_strings);
-        //         for($j=0;$j<count($add_on_strings); $j++) {
-        //             $formatted_food_details = $formatted_food_details . "<br/>-" . $add_on_strings[$j];
-        //         }
-        //     } else
-        //         $formatted_food_details = $formatted_food_details . "<br/>" . $temp[$i];
-        // }
-        $subject = "Successful Order No. " . $order_id;
-
-
-        $message = "Thank you for ordering from Bedok 85 Hawker Centre!
-        <br/>
-        <br/><b>Customer Name:</b> $customer_name
-        <br/><b>Order ID:</b> ". $order_id . "
-        <br/><b>Order Date/Time:</b> " . $order_datetime . "
-        <br/>
-        <br/><u><b>Food Details</b></u><br/>
-        " . $formatted_food_details . "
-        <br/>
-        <br/><b>Cost:</b> \$" . $order_total_price . "
-        <br/><b>Order Status </b>";
-        if ($collection_mode=='Delivery') {
-            $message .= "(<b>Delivery:</b> $delivery_address):<br/>";
-        } else
-            $message .= "(<b>Self-pickup</b>)<b>:</b><br/>";
-        $message .= $order_status . ".<br/><br/>";
-        // $message .= "Remark:\n$remark";
-
-        echo $message;
-
-        //Create an instance; passing `true` enables exceptions
-        $mail = new PHPMailer(true);
-
-        try {
-            //Server settings
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp-mail.outlook.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = EMAIL_USERNAME;                     //SMTP username
-            $mail->Password   = EMAIL_PASSWORD;                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
-            $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-            //Sender
-            $mail->setFrom(EMAIL_USERNAME);
-            //Recipient(s)
-            $mail->addAddress($customer_email);     //Add a recipient
-            // $mail->addAddress('ellen@example.com');               //Name is optional
-            // $mail->addReplyTo('info@example.com', 'Information');
-            // $mail->addCC('cc@example.com');
-            // $mail->addBCC('bcc@example.com');
-
-            //Attachments
-            // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = $subject;
-            $mail->Body    = $message;
-            $mail->AltBody = $message;
-
-            return $mail->send();
-        } catch (Exception $e) {
-            return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
-
+        $order += array('order_id' => $order_id);
+        //===== TODO HERE ===========
+        $customerReceiptRenderer = new CustomerReceiptRenderer();
+        $email = new Email($customerReceiptRenderer, $order);
+        $email->setContent();
+        return $email->send();
     } else
         return "Error adding order into database";
 

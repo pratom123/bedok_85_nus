@@ -4,16 +4,7 @@ require('../src/User.php');
 
 include('../login/logindb.php');
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bedok_85";
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-}
+include '../common/connectDB.php';
 
 if(!empty($_SESSION['valid_user']))
 {
@@ -38,6 +29,6 @@ if(!empty($_SESSION['valid_user']))
 
 
 
-mysqli_close($conn);
+mysqli_close($db);
     
 ?>

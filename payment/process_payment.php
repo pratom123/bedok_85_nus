@@ -165,21 +165,21 @@ if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id']) && isset($
                         // // $isEmailSuccess = true;
                         if ($isEmailSuccess) {
                             // clear cart
-                            // unset($_SESSION['cart']);
+                            unset($_SESSION['cart']);
                             
                             echo 'Order placed successfully! Please check your email for order receipt!';
-                            // echo "<script type='text/javascript'>
-                            //     alert('Your order placement is successful! Your order no. is " . $max_order_id .". Please check your email for your order updates!');
-                            //     console.log('" . $proj_dir . "home/index.php');
-                            //     location.href = '" . $proj_dir . "home/index.php';
-                            //     </script>";
+                            echo "<script type='text/javascript'>
+                                alert('Your order placement is successful! Your order no. is " . $max_order_id .". Please check your email for your order updates!');
+                                console.log('" . $proj_dir . "home/index.php');
+                                location.href = '" . $proj_dir . "home/index.php';
+                                </script>";
                         } else {
-                            // echo 'Order placement or email of order receipt failed!';
-                            // echo "<script type='text/javascript'>
-                            // alert('Your order placement or email of order receipt failed! Error:" . $isEmailSuccess . "');
-                            // console.log('" . $proj_dir . "cart/cart.php');
-                            // location.href = '" . $proj_dir . "cart/cart.php';
-                            // </script>";
+                            echo 'Order placement or email of order receipt failed!';
+                            echo "<script type='text/javascript'>
+                            alert('Your order placement or email of order receipt failed! Error:" . $isEmailSuccess . "');
+                            console.log('" . $proj_dir . "cart/cart.php');
+                            location.href = '" . $proj_dir . "cart/cart.php';
+                            </script>";
                         }
                     }
                 } else {

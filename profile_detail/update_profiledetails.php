@@ -38,24 +38,24 @@ if(!empty($email)){
     
     $sql = "UPDATE user SET email = '$email' WHERE username = '$username'";
 
-    mysqli_query($conn, $sql);
+    mysqli_query($db, $sql);
 }
 
 if(!empty($password)){
     
     $sql = "UPDATE user SET password = '$password' WHERE username = '$username'";
 
-    mysqli_query($conn, $sql);
+    mysqli_query($db, $sql);
 }
 if(!empty($phoneno)){
     $sql = "UPDATE user SET contact_no = '$phoneno' WHERE username = '$username'";
 
-    mysqli_query($conn, $sql);
+    mysqli_query($db, $sql);
 }
 if(!empty($addr1)){
     $sql = "UPDATE user SET address = '$addr1' WHERE username = '$username'";
 
-    mysqli_query($conn, $sql);
+    mysqli_query($db, $sql);
 }
 
 
@@ -64,24 +64,24 @@ if((!empty($creditcard)) && (!empty($creditname)) && (!empty($cv2)) && (!empty($
     if(!empty($creditcard)){
         $sql = "UPDATE credit_card SET credit_card_no = '$creditcard' WHERE c_user_id = '$user_id'";
     
-        mysqli_query($conn, $sql);
+        mysqli_query($db, $sql);
     }
 
     if(!empty($creditname)){
         $sql = "UPDATE credit_card SET card_name = '$creditname' WHERE c_user_id = '$user_id'";
     
-        mysqli_query($conn, $sql);
+        mysqli_query($db, $sql);
     }
 
     if(!empty($cv2)){
         $sql = "UPDATE credit_card SET cv2 = '$cv2' WHERE c_user_id = '$user_id'";
     
-        mysqli_query($conn, $sql);
+        mysqli_query($db, $sql);
     }
     if(!empty($expirydate)){
         $sql = "UPDATE credit_card SET expiry_date = '$expirydate' WHERE c_user_id = '$user_id'";
     
-        mysqli_query($conn, $sql);
+        mysqli_query($db, $sql);
     }
 }
 
