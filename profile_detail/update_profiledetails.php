@@ -8,6 +8,7 @@ new CreditCard($_GET['user_id'],$_GET['card_num'],$_GET['card_name'],$_GET['secu
 
 $userQuery = new UserRepository($db);
 $userQuery->save($userUpdated);
+
 // $password=$_GET['password'];
 // $email=$_GET['email'];
 // $phoneno=$_GET['phoneno'];

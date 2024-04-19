@@ -69,25 +69,23 @@ final class UserRepository {
             $query .= implode(", ", $setValues) . " WHERE user_id = " . $user->getUserId();
             $statement = $this->db->prepare($query);
             $statement->execute();
+
+            $querycc = "UPDATE credit_card SET ";
+            $cc = $user->getCreditCard();
+            $setValues = [];
+            if($cc->getCreditCardNo())           
+                {$setValues[] = "credit_card_no = '" . $cc->getCreditCardNo() . "'";} 
+            if($cc->getCardName())
+                {$setValues[] = "card_name = '" . $cc->getCardName() . "'";}             
+            if($cc->getExpiryDate())  
+                {$setValues[] = " expiry_date = '" . $cc->getExpiryDate() . "'";}                  
+            if($cc->getCV2())            
+                 {$setValues[] = " cv2 = '" . $cc->getCV2() . "'";}
+
+            $querycc .= implode(", ", $setValues) . " WHERE c_user_id = " . $cc->getCUserId();
+            $statement = $this->db->prepare($querycc);
+            $statement->execute();
         }
-
-        // need to update credit card info
-
-
-
-        // if ($user->getId()) {
-        //     // Update existing user
-        //     $query = "UPDATE user SET username = ?, password = ?, contact_no = ?, email = ?, address = ?, user_type = ? WHERE user_id = ?";
-        // } else {
-        //     // Insert new user
-        //     $query = "INSERT INTO user (username, password, contact_no, email, address, user_type) VALUES (?, ?, ?, ?, ?, ?)";
-        // }
-        // $statement = $this->db->prepare($query);
-        // $statement->bind_param('ssisssi', $usr->getUsername(), $user->getPassword(), $user->getContactNo(), $user->getEmail(), $user->getAddress(), $user->getUserType(), $user->getId());
-        // $statement->execute();
-        // if (!$user->getId()) {
-        //     $user->setId($this->db->insert_id);
-        // }
     }
 
     public function delete($user_id) {
