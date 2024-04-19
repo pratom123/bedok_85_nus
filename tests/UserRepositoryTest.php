@@ -20,9 +20,9 @@ final class UserRepositoryTest extends TestCase {
         ];
 
         $mysqliMock = $this->createMock(mysqli::class);
-        $mysqliMock->expects($this->once())->method('prepare')->willReturn('...');  // Insert the return value of the prepare function here.
-        $mysqliMock->expects($this->once())->method('bind_param')->willReturn('');
-        $mysqliMock->expects($this->once())->method('execute')->willReturn('');  // Insert the return value of the prepare function here. 
+        $mysqliMock->expects($this->once())->method('prepare')->willReturn(true);  // Insert the return value of the prepare function here.
+        $mysqliMock->expects($this->once())->method('bind_param')->willReturn(true);
+        $mysqliMock->expects($this->once())->method('execute')->willReturn(true);  // Insert the return value of the prepare function here. 
         $mysqliMock->expects($this->once())->method('get_result')->willReturn($userData);
 
 
