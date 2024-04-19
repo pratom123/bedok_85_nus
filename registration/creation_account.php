@@ -40,7 +40,7 @@ if(mysqli_num_rows($result) > 0){
 mysqli_close($db);    
 
     function create_account($firstname, $lastname, $username, $password, $email, $phoneno, $addr1,$addr2,$addr3, $creditcard, $creditname, $cv2, $expirydate) {
-        $db = mysqli_connect("localhost", "root", "", "Bedok_85_nus");
+        $db = mysqli_connect("localhost", "root", "", "bedok_85_nus");
     
         if (!$db) {
             die("Connection failed: " . mysqli_connect_error());
