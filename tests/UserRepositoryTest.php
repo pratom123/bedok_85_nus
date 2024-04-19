@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-final class UserRepositoryTest {
+final class UserRepositoryTest extends TestCase {
     public function testFindByIdReturnsUserObject() {
         // Arrange
         $mockStatement = $this->createMock(PDOStatement::class);
