@@ -1,25 +1,12 @@
 <?php
 include('insertprofile_detail.php');
-
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bedok_85";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    return;
-}
+include '../common/connectDB.php';
 
 $userUpdated = new User($_GET['user_id'],$_GET['username'],$_GET['password'],
 $_GET['phoneno'],$_GET['email'],$_GET['addr1'],$user->getUserType(),
 new CreditCard($_GET['user_id'],$_GET['card_num'],$_GET['card_name'],$_GET['security_code'],$_GET['expiry_date']));
 
-$userQuery = new UserRepository($conn);
+$userQuery = new UserRepository($db);
 $userQuery->save($userUpdated);
 // $password=$_GET['password'];
 // $email=$_GET['email'];
