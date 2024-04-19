@@ -16,15 +16,18 @@
     {
     $getusername = $_SESSION['valid_user'];
 
-    $sql = "SELECT * from user
-    INNER JOIN credit_card
-    WHERE username ='$getusername' 
-    AND c_user_id = user_id" ;
-    $result = mysqli_query($db, $sql);
+    // $sql = "SELECT * from user
+    // INNER JOIN credit_card
+    // WHERE username ='$getusername' 
+    // AND c_user_id = user_id" ;
+    // $result = mysqli_query($conn, $sql);
 
-    if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        if ($row['password'] != $pw){
+    $userQuery = new UserRepository($conn);
+    $user = $userQuery->findByUsername($_SESSION['valid_user']); 
+    $cc = $user->getCreditCard();
+    if ($user) {
+   
+        if ($user->getPassword() != $pw){
             echo "<script>alert('Passwords do not match! Please try again.');</script>";
             header("refresh:0;url=profile_details.php");
         }
@@ -128,27 +131,28 @@ include '../common/overlay.php';
                 </section>
             </td>
         </tr> -->
+        <input type='text' id='user_id' name='user_id' hidden value='<?php echo $user->getUserId();?>'>
         <tr>
-            <td align="left" colspan="2"><label>Username: </label><input type="text" size= "20" id="username" name="username" value="<?php echo $row['username'];?>" readonly></br></td>
+            <td align="left" colspan="2"><label>Username: </label><input type="text" size= "20" id="username" name="username" value="<?php echo $user->getUsername();?>" readonly></br></td>
         </tr>
         <tr>
             <td colspan="2"><label>Password*: </label><input type="password" size= "20" id="password" name="password"></td>
         </tr>
         <tr>
             <td colspan="2">
-            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" onfocus="if(this.value == '<?php echo $row['email'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['email'];?>' }" name="email" value="<?php echo $row['email'];?>" >
+            <section id='e_mail_section'><label>E-mail: </label><input type="text" size= "20" id="email" onfocus="if(this.value == '<?php echo $user->getEmail();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $user->getEmail();?>' }" name="email" value="<?php echo $user->getEmail();?>" >
             <label><div class="invalid_error_msg_email">Invalid Email format!</label></div>
             </section></td>
         </tr>
         <tr>
             <td colspan="2">
-            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id="phoneno" onfocus="if(this.value == '<?php echo $row['contact_no'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['contact_no'];?>' }" name="phoneno" value="<?php echo $row['contact_no'];?>" maxlength="8">
-            <label><div class="invalid_error_msg_phoneno">Number digits only!</label></div>
+            <section id='phone_section'><label>Mobile No.: </label><input type="text" size= "20" id="phoneno" name="phoneno" onfocus="if(this.value == '<?php echo $user->getContactNo();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $user->getContactNo();?>" value="<?php echo $user->getContactNo();?>" maxlength="8">
+            <label><div class="invalid_error_msg_phoneno">Number digits only!</label></div> 
             </section> 
             </td>
         </tr>
         <tr>
-            <td colspan="2"><label>Address 1: </label><input type="text" size= "20" id="addr1" name="addr1" onfocus="if(this.value == '<?php echo $row['address'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['address'];?>' }"value="<?php echo $row['address'];?>" ></td>
+            <td colspan="2"><label>Address 1: </label><input type="text" size= "20" id="addr1" name="addr1" onfocus="if(this.value == '<?php echo $user->getAddress();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $user->getAddress();?>' }"value="<?php echo $user->getAddress();?>" ></td>
         </tr>
         <tr>
         <td colspan="2"> 
@@ -156,23 +160,23 @@ include '../common/overlay.php';
         <div id='img_wrapper' style="padding-bottom:5px;"><label></label> <img src="../common/img/credit_card_logos.jpg" alt='Acceptable Credit Cards' width="144" height="34"></div>
             <section id='card_num_section' style="padding-bottom:10px;">
                 <label>Card number:</label>
-                <input type="text" maxlength="19"  id='card_num' name='card_num' onfocus="if(this.value == '<?php echo $row['credit_card_no'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['credit_card_no'];?>' }" value="<?php echo $row['credit_card_no'];?>">
+                <input type="text" maxlength="19"  id='card_num' name='card_num' onfocus="if(this.value == '<?php echo $cc->getCreditCardNo();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $cc->getCreditCardNo();?>' }" value="<?php echo $cc->getCreditCardNo();?>">
                 <label><div class="invalid_error_msg">Invalid card number!</label></div>
             </section>
             <section id='card_name_section' style="padding-bottom:10px;">
                 <label>Name on card:</label>
-                <input type="text" maxlength="50"  id='card_name' name="card_name" onfocus="if(this.value == '<?php echo $row['card_name'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['card_name'];?>' }" value="<?php echo $row['card_name'];?>">
+                <input type="text" maxlength="50"  id='card_name' name="card_name" onfocus="if(this.value == '<?php echo $cc->getCardName();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $cc->getCardName();?>' }" value="<?php echo $cc->getCardName();?>">
                 <label><div class="invalid_error_msg">Only Alphabets with spaces in between allowed!</label></div>
             </section>
             <section id='expiry_security_section' style="padding-bottom:10px;">
                 <aside id='expiry_section'>
                 <label>Expiry date:</label>
-                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" onfocus="if(this.value == '<?php echo $row['expiry_date'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['expiry_date'];?>' }" value="<?php echo $row['expiry_date'];?>">
+                <input type="text" maxlength="5"  size="1" id='expiry_date' name="expiry_date" onfocus="if(this.value == '<?php echo $cc->getExpiryDate();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $cc->getExpiryDate();?>' }" value="<?php echo $cc->getExpiryDate();?>">
                 <label><div class="invalid_error_msg">Invalid date!</label></div>
             </aside></section>
             <aside id='security_section' style="padding-bottom:10px;">
                 <label>Security code:</label>
-                <input type="password" maxlength="3"  size="1" id='security_code' name="security_code" onfocus="if(this.value == '<?php echo $row['cv2'];?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $row['cv2'];?>' }" value="<?php echo $row['cv2'];?>">
+                <input type="password" maxlength="3"  size="1" id='security_code' name="security_code" onfocus="if(this.value == '<?php echo $cc->getCv2();?>') { this.value = ''; }" onblur="if(this.value == '') { this.value = '<?php echo $cc->getCv2();?>' }" value="<?php echo $cc->getCv2();?>">
                 <label><div class="invalid_error_msg">Exactly 3 digits only!</label></div>
             </aside></td>
             </section>
