@@ -1,4 +1,5 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
 final class UserRepositoryTest {
     public function testFindByIdReturnsUserObject() {
