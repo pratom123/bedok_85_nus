@@ -14,13 +14,13 @@ if(!empty($_SESSION['valid_user']))
     // INNER JOIN credit_card
     // WHERE username ='$getusername' 
     // AND c_user_id = user_id" ;
-    // $result = mysqli_query($conn, $sql);
+    // $result = mysqli_query($db, $sql);
     
     // if ($result) {
     //     $row = mysqli_fetch_assoc($result);
     // }
 
-    $userQuery = new UserRepository($conn);
+    $userQuery = new UserRepository($db);
 
     $user = $userQuery->findByUsername($_SESSION['valid_user']);
     $cc = $user->getCreditCard();
