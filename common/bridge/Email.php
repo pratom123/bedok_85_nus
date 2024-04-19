@@ -30,8 +30,11 @@ class Email
 
     private $subject;
     private $message;
+    private $smtp_host = SMTP_HOST;
+
     private $username = EMAIL_USERNAME;
     private $password = EMAIL_PASSWORD;
+    private $sender_email = EMAIL_SENDER;
     private $customer_email;
 
 
@@ -51,9 +54,9 @@ class Email
 
         try {
             //Server settings
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp-mail.outlook.com';                     //Set the SMTP server to send through
+            $mail->Host       = $this->smtp_host;                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
             $mail->Username   = $this->username;                     //SMTP username
             $mail->Password   = $this->password;                               //SMTP password
@@ -61,7 +64,7 @@ class Email
             $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Sender
-            $mail->setFrom(EMAIL_USERNAME);
+            $mail->setFrom($this->sender_email);
             //Recipient(s)
             $mail->addAddress($this->customer_email);     //Add a recipient
             // $mail->addAddress('ellen@example.com');               //Name is optional
