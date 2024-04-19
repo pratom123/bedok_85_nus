@@ -3,11 +3,6 @@ use PHPUnit\Framework\TestCase;
 
 final class UserRepositoryTest extends TestCase {
     public function testFindByIdReturnsUserObject() {
-        // Mock the database connection
-        $mockDb = $this->getMockBuilder(PDO::class)
-                       ->disableOriginalConstructor()
-                       ->getMock();
-
         // Prepare a sample user data
         $userData = [
             'user_id' => 1,
@@ -24,26 +19,15 @@ final class UserRepositoryTest extends TestCase {
             'expiry_date' => '12/24'
         ];
 
-        // Mock the result set with the sample user data
-        $mockStatement = $this->getMockBuilder(PDOStatement::class)
-                              ->disableOriginalConstructor()
-                              ->getMock();
-        $mockStatement->expects($this->once())
-                      ->method('fetch_assoc')
-                      ->willReturn($userData);
+        $mysqliMock = $this->createMock(mysqli::class);
+        $mysqliMock->expects($this->once())->method('prepare')->willReturn('...');  // Insert the return value of the prepare function here.
+        $mysqliMock->expects($this->once())->method('bind_param')->willReturn('');
+        $mysqliMock->expects($this->once())->method('execute')->willReturn('');  // Insert the return value of the prepare function here. 
+        $mysqliMock->expects($this->once())->method('get_result')->willReturn($userData);
 
-        // Mock the prepare and execute methods
-        $mockDb->expects($this->once())
-               ->method('prepare')
-               ->willReturn($mockStatement);
-        $mockDb->expects($this->once())
-               ->method('bind_param')
-               ->with('i', 1);
-        $mockDb->expects($this->once())
-               ->method('execute');
 
         // Inject the mocked database connection into the UserRepository
-        $userRepository = new UserRepository($mockDb);
+        $userRepository = new UserRepository($mysqliMock);
 
         // Call the method under test
         $user = $userRepository->findById(1);
