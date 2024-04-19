@@ -10,7 +10,7 @@ include 'function_definition.php';
         header("Location:../home/index.php");
     }
 
-    $proj_dir = 'http://54.162.72.241/bedok_85_nus/';
+    $proj_dir = '../';
 ?>
 <!DOCTYPE html>
 <html lang='en'>

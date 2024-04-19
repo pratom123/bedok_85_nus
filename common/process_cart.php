@@ -2,7 +2,7 @@
 
 <?php 
 session_start(); 
-$proj_dir = 'http://54.162.72.241/bedok_85_nus/';
+$proj_dir = '../';
 ?>
 
 <html lang="en">
