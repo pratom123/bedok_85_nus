@@ -1,9 +1,13 @@
 <?php 
-    // session_start();
+    if(!isset($_SESSION))
+        session_start();
     // $_SESSION["isLoggedIn"] = true;
     // include 'initialize_all';
 
-    $dir = '../'; //project directory
+    if (isset($_SESSION['isAtFoodPage']) && $_SESSION['isAtFoodPage'] == true) {
+        $dir = '../../';
+    } else
+        $dir = '../'; //project directory
 ?>
 
 <div class="overlay_background" id="overlay_background">

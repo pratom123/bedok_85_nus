@@ -1,9 +1,13 @@
 <?php 
-    // session_start();
+    if(!isset($_SESSION))
+        session_start();
     // $_SESSION["isLoggedIn"] = true;
     // include 'initialize_all';
+    if (isset($_SESSION['isAtFoodPage']) && $_SESSION['isAtFoodPage'] == true) {
+        $dir = '../../';
+    } else
+        $dir = '../'; //project directory
 
-    $dir = '../'; //project directory
 ?>
 
 <!-- this is the main nav bar for all pages -->
