@@ -11,12 +11,5 @@
         </whitelist>
     </filter>
 
-    <coverage>
-        <include>
-            <directory>src</directory>
-        </include>
-        <report>
-            <html outputFile="build/coverage/index.html"/>
-        </report>
-    </coverage>
+    <log type="junit" target="build/reports/phpunit.xml"/>
 </phpunit>
