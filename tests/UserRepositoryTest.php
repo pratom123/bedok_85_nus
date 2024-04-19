@@ -19,22 +19,21 @@ final class UserRepositoryTest extends TestCase {
             'expiry_date' => '12/24'
         ];
 
-        $mysqliMock = $this->createMock(mysqli::class);
-        $mysqliMock->expects($this->once())->method('prepare')->willReturn(true);  // Insert the return value of the prepare function here.
-        $mysqliMock->expects($this->once())->method('bind_param')->willReturn(true);
-        $mysqliMock->expects($this->once())->method('execute')->willReturn(true);  // Insert the return value of the prepare function here. 
-        $mysqliMock->expects($this->once())->method('get_result')->willReturn($userData);
-
+        $mysqliMock = $this->createMock(DatabaseInterface::class);
+        $mysqliMock->expects($this->once())->method('prepare')->willReturn($mysqliMock);  
+        $mysqliMock->expects($this->once())->method('bind_param');
+        $mysqliMock->expects($this->once())->method('execute');  
+        $mysqliMock->expects($this->once())->method('get_result')->willReturn($mysqliMock);
+        $mysqliMock->expects($this->once())->method('fetch_assoc')->willReturn($userData);
 
         // Inject the mocked database connection into the UserRepository
         $userRepository = new UserRepository($mysqliMock);
 
         // Call the method under test
         $user = $userRepository->findById(1);
-
         // Assert that the returned user object is correct
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($userData['user_id'], $user->getId());
+        $this->assertEquals($userData['user_id'], $user->getUserId());
         $this->assertEquals($userData['username'], $user->getUsername());
         // Add more assertions for other properties as needed
     }
