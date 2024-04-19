@@ -1,2 +1,4 @@
 
 /vendor/
+config.php
+/common/bridge/Email.php
