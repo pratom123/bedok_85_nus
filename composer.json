@@ -1,11 +1,11 @@
 {
     "name": "team_23/bedok_85_nus",
     "autoload": {
-        "psr-4": {
-            "D1360482\\Bedok85Nus\\": "src/"
-        }
+        "classmap": [
+            "src/"
+        ]
     },
-    "require": {
-        "phpunit/phpunit": "^11"
+    "require-dev": {
+        "phpunit/phpunit": "9"
     }
 }

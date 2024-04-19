@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-
-require_once("C:\\xampp\htdocs\bedok_85_nus\src\Email.php");
-
 final class EmailTest extends TestCase
 {
     public function testCanBeCreatedFromValidEmail(): void
@@ -12,9 +9,13 @@ final class EmailTest extends TestCase
 
         $email = Email::fromString($string);
 
-        // $this->assertSame($string, $email->asString());
-        $this->assertSame('test', $email->asString());
-        // $this->assertIsBool(null);
+        $this->assertSame($string, $email->asString());
     }
 
+    public function testCannotBeCreatedFromInvalidEmail(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Email::fromString('invalid');
+    }
 }
