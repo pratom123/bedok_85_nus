@@ -10,4 +10,13 @@
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
+
+    <coverage>
+        <include>
+            <directory>src</directory>
+        </include>
+        <report>
+            <html outputFile="build/coverage/index.html"/>
+        </report>
+    </coverage>
 </phpunit>
