@@ -17,7 +17,11 @@ final class Validate {
         $reg = '/^(([a-zA-Z] )|([a-zA-Z]))+[a-zA-Z]+$/'; // Only Alphabets with spaces in between allowed
         $isValid = preg_match($reg, $card_name);
 
-        return $isValid;
+        if (!$isValid) {
+            // Error message
+            return false;
+        }
+        return true;
     }
 
     
