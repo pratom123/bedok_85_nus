@@ -1,6 +1,7 @@
 <?php
 include('insertprofile_detail.php');
 
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,19 +15,24 @@ if (!$conn) {
     return;
 }
 
+$userUpdated = new User($_GET['user_id'],$_GET['username'],$_GET['password'],
+$_GET['phoneno'],$_GET['email'],$_GET['addr1'],$user->getUserType(),
+new CreditCard($_GET['user_id'],$_GET['card_num'],$_GET['card_name'],$_GET['security_code'],$_GET['expiry_date']));
 
-$password=$_GET['password'];
-$email=$_GET['email'];
-$phoneno=$_GET['phoneno'];
-$addr1=$_GET['addr1'];
-// $addr2=$_GET['addr2'];
-// $addr3=$_GET['addr3'];
-$creditcard=$_GET['card_num'];
-$creditname=$_GET['card_name'];
-$cv2=$_GET['security_code'];
-$expirydate=$_GET['expiry_date'];
-$username=$row['username'];
-$user_id = $row['user_id'];
+$userQuery = new UserRepository($conn);
+$userQuery->save($userUpdated);
+// $password=$_GET['password'];
+// $email=$_GET['email'];
+// $phoneno=$_GET['phoneno'];
+// $addr1=$_GET['addr1'];
+// // $addr2=$_GET['addr2'];
+// // $addr3=$_GET['addr3'];
+// $creditcard=$_GET['card_num'];
+// $creditname=$_GET['card_name'];
+// $cv2=$_GET['security_code'];
+// $expirydate=$_GET['expiry_date'];
+// $username=$row['username'];
+// $user_id = $row['user_id'];
 
 if(!empty($email)){
     
