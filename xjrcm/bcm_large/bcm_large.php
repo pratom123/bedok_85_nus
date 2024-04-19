@@ -14,8 +14,14 @@
 <body>
     <?php include '../../common/check_login.php' ?>
     <!-- overlay is the sidepanel for navigation links -->
+    <?php 
+        if(!isset($_SESSION))
+            session_start();
+        $_SESSION['isAtFoodPage'] = true; 
+    ?>
     <?php include '../../common/overlay.php' ?>
     <?php include '../../common/top_header.php' ?>
+    <?php unset($_SESSION['isAtFoodPage']); ?>
     
     <div class='path_directory'>
         <!-- path directory -->
