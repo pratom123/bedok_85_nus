@@ -10,7 +10,7 @@ include '../common/initialize_all.php';
 include 'function_definition.php';
 ini_set('display_errors', 1);
 session_start();
-$proj_dir = 'http://localhost/bedok_85_nus/';
+$proj_dir = 'http://54.162.72.241/bedok_85_nus/';
 ?>
 </head>
 <body>
