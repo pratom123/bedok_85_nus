@@ -11,7 +11,7 @@
     if(!empty($signout_user))
     {
         echo "<script>alert('Logged out successfully! You will be sent back to the mainpage.');</script>";
-        header("refresh:0;url=http://54.162.72.241/bedok_85_nus/home/index.php");
+        header("refresh:0;url=../home/index.php");
     }
 
     else
