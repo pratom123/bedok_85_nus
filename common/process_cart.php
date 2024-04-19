@@ -2,7 +2,7 @@
 
 <?php 
 session_start(); 
-$proj_dir = 'http://localhost/bedok_85_nus/';
+$proj_dir = '../';
 ?>
 
 <html lang="en">

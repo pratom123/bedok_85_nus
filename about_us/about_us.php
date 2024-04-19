@@ -111,7 +111,8 @@
     <body>
       <?php
       include("../login/logindb.php");
-      session_start();
+      if(!isset($_SESSION))
+        session_start();
       ?>
           <?php include '../common/overlay.php' ?>
           <?php include '../common/top_header.php' ?>
