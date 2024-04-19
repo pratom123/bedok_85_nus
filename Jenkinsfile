@@ -1,7 +1,21 @@
 pipeline {
     stages {
-        stage('build') {
+        stage('PHP Build and Test') {
             steps {
+                script {
+                try {
+                    if (fileExists('composer.json')) {
+                    sh 'composer install'
+                    sh 'phpunit'
+                    } else {
+                    // If composer.json doesn't exist, print a message and continue 
+                    echo 'No composer.json found, skipping PHP build and test.'
+                    }
+                } catch (Exception e) {
+                    currentBuild.result = 'FAILURE'
+                    error("Error during PHP build and test: ${e.message}")
+                }
+                }
                 sh 'composer install'
             }
         }
