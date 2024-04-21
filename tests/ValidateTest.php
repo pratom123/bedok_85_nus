@@ -10,7 +10,7 @@ class ValidateTest extends TestCase {
         $isValid = Validate::validateCardNum($cardNum);
 
         // Assert
-        $this->assertTrue(!$isValid);
+        $this->assertTrue($isValid);
     }
 
     public function testInvalidCardNumber() {
